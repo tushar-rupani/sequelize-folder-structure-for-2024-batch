@@ -1,5 +1,5 @@
 const { generalResponse } = require("../helpers/response.helper");
-const { getUsers } = require("../repository/user.repository");
+const { getUsers, getUserWithPosts } = require("../repository/user.repository");
 
 async function getAllUsers(req, res) {
   try {
@@ -23,8 +23,10 @@ async function getAllUsers(req, res) {
 
 async function insertUser(req, res) {
   try {
+    const currentTime = new Date().toISOString();
     const { firstName, lastName, email } = req.body;
-    const newUser = createUser({ firstName, lastName, email });
+    // don't pass this custom TimeStamps to database this way - add NOW() in default and updatedAt should be null while inserting data.
+    const newUser = await createUser({ firstName, lastName, email, createdAt:currentTime, updatedAt: currentTime });
     return generalResponse(
       res,
       newUser,
@@ -43,7 +45,28 @@ async function insertUser(req, res) {
   }
 }
 
+async function getUserPosts(req, res) {
+  try {
+    const userId = req.query.id;
+    const userPosts = await getUserWithPosts(userId)
+    return generalResponse(
+      res,
+      userPosts,
+      "User posts fetched.",
+      true
+    );
+  } catch (error) {
+    return generalResponse(
+      res,
+      { success: false },
+      "Something went wrong while fetching users!",
+      "error",
+      true
+    );
+  }
+}
 module.exports = {
   getAllUsers,
   insertUser,
+  getUserPosts
 };

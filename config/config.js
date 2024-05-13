@@ -1,7 +1,6 @@
-import dotEnv from "dotenv"
-
+const dotEnv = require("dotenv")
 dotEnv.config({ path: `.env` });
-export default {
+module.exports = {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
 };
