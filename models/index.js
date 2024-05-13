@@ -11,8 +11,7 @@ require("dotenv").config();
 /**
  * We are establishing a connection between Sequelize and our database here.
  */
-const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
-  host: process.env.DATABASE_HOST,
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres' //Sequelize Supports many dialects - such as MySQL, Postgres and many more.
 });
 sequelize.authenticate()
